@@ -125,9 +125,8 @@ def mostrar_tablero(tablero,letras_erroneas,vidas):
         print('Letras erróneas:', *letras_erroneas)
         print()  
         if vidas > 1:
-            print(f'Te restan: {vidas - len(letras_erroneas)} vidas, Aprovechalas!')
-        else:   
-            print(f'No te quedan mas vidas!')  
+            print(f'Te restan: {vidas - len(letras_erroneas)} vidas, Aprovechalas!')       
+           
             
     else:
         print(f'Tienes en total: {vidas} vidas, Aprovechalas!')    
@@ -353,7 +352,7 @@ def definir_juego():
     categoria_seleccionada = definir_categoria()   
     
         
-    if nivel_validado >= 1 and nivel_validado <= 3: 
+    if nivel_validado!= 4: 
         #Definir la palabra de acuerdo a la categoria seleccionada y el nivel  
         palabra_secreta = obtenerPalabraAlAzar (nivel_validado,categoria_seleccionada)
     else:
