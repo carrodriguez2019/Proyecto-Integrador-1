@@ -333,45 +333,60 @@ def obtenerNivel():
     
 #Define la categoria, el nivel y ;a palabra a adivinar
 def definir_juego():        
-    #El sistema elige una categoria para iniciar el juego            
-    categoria_seleccionada = definir_categoria()
     #Definir nivel
     valor_nivel = obtenerNivel()
-    nivel_validado = validar_digito (valor_nivel)
-    nivel = int (nivel_validado) 
-    if nivel != 4:
+    digito, nivel_validado = validar_digito (valor_nivel)
+    while digito == False:
+        valor_nivel = input('El valor ingresado no corresponde a un numero. Ingrese nuevamente un valor del 1 al 4: ')
+        digito, nivel_validado = validar_digito (valor_nivel)
+
+    rango = False
+    while rango == False:        
+        if nivel_validado < 1 or nivel_validado > 4: 
+            rango = False
+            valor_nivel = input('Esta fuera del rango. Ingrese nuevamente un valor del 1 al 4: ')
+            digito, nivel_validado = validar_digito (valor_nivel)
+            continue   
+        else:
+            rango = True    
+    #El sistema elige una categoria para iniciar el juego            
+    categoria_seleccionada = definir_categoria()   
+    
+        
+    if nivel_validado >= 1 and nivel_validado <= 3: 
         #Definir la palabra de acuerdo a la categoria seleccionada y el nivel  
-        palabra_secreta = obtenerPalabraAlAzar (nivel,categoria_seleccionada)
+        palabra_secreta = obtenerPalabraAlAzar (nivel_validado,categoria_seleccionada)
     else:
         palabra_secreta = ''
          
-    return categoria_seleccionada,nivel,palabra_secreta  
+    return categoria_seleccionada,nivel_validado,palabra_secreta  
 
 #Valida que lo que se ingreso sea un digito
-def validar_digito(opcion): 
-    i = True   
-    while i == True:
-        if opcion.isdigit():  
-            i = False                 
-            return int(opcion)
-        else:
-            print ('Valor ingresado no es valido')         
-            continue         
+def validar_digito(opcion):    
+    if opcion.isdigit():                            
+        opcion = int(opcion)
+        i = True
+    else:
+        # print ('Valor ingresado no es valido')         
+         i = False
+    return i,opcion             
 
 
 bienvenida() #Imprimos mensajes de bienvenida
 jugar = True
 #Mientras el usuario quiera jugar
-while jugar:   
+while jugar == True:  
     categoriaJuego,valor_nivel,palabraJuego = definir_juego()  #Definir categoria, nivel y palabra para empezar a jugar
-    if valor_nivel != 4:    # diferente de la opcion Salir emtonces comencemos el juego
+  
+    if valor_nivel >= 1 and valor_nivel <= 3:   # Jugar cuando selecciones niveles del 1 al 3
         jugar_al_ahorcado(categoriaJuego,valor_nivel,palabraJuego)
         if jugar_otra_vez() != 's': # Si salir entonces mostrar un mensaje de despedida
             despedida()
             break      
-            
-    else:
+    elif valor_nivel == 4:
         despedida() # Si salir entonces mostrar un mensaje de despedida
-        break       
+        break    
+  
+            
       
 
