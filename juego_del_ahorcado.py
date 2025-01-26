@@ -1,8 +1,10 @@
+
+#Blioteca estándar que proporciona funciones para generar números aleatorios y realizar operaciones aleatorias.
 import random
-import time
 
-tablero = []
 
+
+#1 Imprime el titulo del juego 
 def display_title():
     title = """
      _   _                                         
@@ -17,6 +19,7 @@ def display_title():
     print(title)
 
 
+#Imprime la figura del ahorcado de acuerdo al numero de intentos restantes
 def imprimir_ahorcado(intentos):
     figuras = [
         """
@@ -84,29 +87,32 @@ def imprimir_ahorcado(intentos):
         """
     ]
     print(figuras[intentos])
-    
+ 
+ #Funcion para dar la bienvenida al programa   
 def bienvenida():
     print('*' * 68)
     print('* Te doy la bienvenida al juego del ahorcado :) *')
     print('*' * 68)
 
 
-# Escoger una palabra aleatoriamente, dibujar el tablero
+# 2 Escoger una palabra aleatoriamente, dibujar el tablero
+tablero = []
 def inicializar_juego(palabra_enviada):
     palabra = palabra_enviada.lower()
     tablero.clear()
-     #Se dibujan las lineas y espacios que tienen la palabta y se guardan en una lista
+    #Se dibujan las lineas y espacios que tienen la palabta y se guardan en una lista
     for casillero in  palabra:
         if ' ' in casillero:
             tablero.append(' ')
         else:
             tablero.append('_')
-    #se retrona el tablero junto con la inicializacion de una lista que tendra las letras erradas
+    #se retrona el tablero junto con la inicializacion de una lista que tendra las letras erradas y letras acertadas
     return tablero,[],[]
 
 
 linea_horizontal = "-" * 120
 linea_vertical = "|" * 120
+# 3 Se muestra el tablero con los espacios para las letras, las letras erroneas y las vidas que tiene
 def mostrar_tablero(tablero,letras_erroneas,vidas):
     print()
     print()
@@ -131,8 +137,7 @@ def mostrar_tablero(tablero,letras_erroneas,vidas):
     print(linea_horizontal)
     
 
-# paso 4
-
+# 4 Pide al usuario que ingrese una letra, valida que este entre a y z, si es acetada la mete en la lista de letras_acertadas, si no esta dentro de los valores esperados genera mensaje y continua hasta que el usuario ingres el valor solicitado. Si ya la habia ingresado anteriormente le indica al usuario que ingrese una que no haya ingresado.
 def pedir_letra(tablero, letras_erroneas,letras_acertadas):
     
     validacion = False
@@ -156,13 +161,13 @@ def pedir_letra(tablero, letras_erroneas,letras_acertadas):
                 validacion = True 
     return letra
 
-# paso 5 (auxiliar)
+# Se actualiza el tablero en los espacios donde corresponde la letra correcta
 def actualizar_tablero(letra, palabra, tablero):
     for indice, letra_palabra in enumerate(palabra):
         if letra == letra_palabra:
             tablero[indice] = letra.upper()
 
-# paso 5
+#5 Si acerto en la letra o no le muestra el mensaje respectivo al usuario. Si acerto invova a la funcion que actualiza el tablero
 def procesar_letra(letra, palabra, tablero, letras_erroneas,intentos):
     letra = letra.lower()
     palabra = palabra.lower()
@@ -174,41 +179,47 @@ def procesar_letra(letra, palabra, tablero, letras_erroneas,intentos):
         letras_erroneas.append(letra)
         intentos = intentos - 1
     return intentos
-        
+
+# 6 Comprueba que no hayan espacios en el tablero y retorna true or false
 def comprobar_palabra(tablero):
     return '_' not in tablero
 
-
+#7 Funcion principal para estructura el juego
 def jugar_al_ahorcado(categoria,nivel,palabra): 
-    display_title()
-    
-    tablero,letras_erroneas,letras_acertadas = inicializar_juego(palabra) 
     terminarJuego = False
     valor_intentos = 6
     
+    display_title() # Muestra el titulo 1
+    
+    tablero,letras_erroneas,letras_acertadas = inicializar_juego(palabra) #2 Inicializar el juego con una plalabra y dibuhar el tablero
+    
+    #Mientras adivina todas las letras de la palabra    
     while terminarJuego == False:
-        print (f'CATEGORIA: {categoria.upper()}') 
-        print (f'NIVEL: {nivel}')  
         
-        imprimir_ahorcado(6 - valor_intentos)
-        mostrar_tablero(tablero, letras_erroneas,6)  # paso 3
-        letra = pedir_letra(tablero, letras_erroneas,letras_acertadas)  # paso 4
-        valor_intentos = procesar_letra(letra, palabra, tablero, letras_erroneas,valor_intentos)  # paso 5   
+        print (f'CATEGORIA: {categoria.upper()}')  #Muestre la cateoria
+        print (f'NIVEL: {nivel}')  #Muestre el nivel
+        
+        imprimir_ahorcado(6 - valor_intentos) #Muestre el dibuho del ahorcado
+        mostrar_tablero(tablero, letras_erroneas,6)  #  3 muestre el tablero con las letras erradas y las vidas
+        letra = pedir_letra(tablero, letras_erroneas,letras_acertadas)  # 4 Pide al usuario ingresar la letra valoda lo ingresado
+        valor_intentos = procesar_letra(letra, palabra, tablero, letras_erroneas,valor_intentos)  # 5 si acerto o no
        
-        if comprobar_palabra(tablero):  # paso 6
-            imprimir_ahorcado(6 - valor_intentos)
-            mostrar_tablero(tablero, letras_erroneas,valor_intentos)  # paso 3           
+        if comprobar_palabra(tablero):  #  6 Comprueba que no hayan espacios entonces el usuario descubrio la palabra
+            imprimir_ahorcado(6 - valor_intentos) #Actualiza el dibujo del ahorcado indicando que se ahorco
+            mostrar_tablero(tablero, letras_erroneas,valor_intentos)  # 3  Se actualiza las vidas y letras erradas, asi como el tablero         
             print('¡Enhorabuena, lo has logrado!')
             terminarJuego = True
         
-        if valor_intentos == 0:
+        if valor_intentos == 0: #Cuando no tiene mas intentos mostrar que perdio
             imprimir_ahorcado(6 - valor_intentos)
             mostrar_tablero(tablero, letras_erroneas,valor_intentos)  # paso 3
             print(f'¡Lo siento! ¡Has perdido! La palabra a adivinar era {palabra}.')
             terminarJuego = True
         else:
-            display_title()
-            
+            display_title() #Mostrar el titulo cada vez que actualiza el tablero
+ 
+ 
+ # Pregunta al usuario si quiere jugar nuevamente           
 def jugar_otra_vez():
     respuesta = input('Deseas jugar otra vez (introduce s para sí o n para no): ').strip().lower()
     validar = True
@@ -223,6 +234,7 @@ def jugar_otra_vez():
     
     return input('Deseas jugar otra vez (introduce s para sí o cualquier otra cosa para no): ').strip().lower()
 
+#Muestra al usuario un mensake de despedoda
 def despedida():
     print('*' * 68)
     print('* Gracias por jugar al ahorcado. ¡Hasta pronto! *')
@@ -239,6 +251,7 @@ def definir_categoria():
     #retorna la categoria
     return categoria_aleatoria 
 
+#De acuerdo al nivel y categoria escoge aleatoriamente una palabra
 valores_jugados = []
 def obtenerPalabraAlAzar(valor_nivel,valor_categoria):
     if valor_categoria == 'Películas':
@@ -292,7 +305,7 @@ def obtenerPalabraAlAzar(valor_nivel,valor_categoria):
         elif valor_nivel == 3:
             lista = ['Benedict Cumberbatch','Tilda Swinton','Mahershala Ali','Lupita Nyong','Rami Malek','Saoirse Ronan','Timothée Chalamet','Zendaya Coleman','Oscar Isaac','Florence Pugh']   
         
-    #Elegir un titulo de pelicua aleatoriamente de la lista
+    #Elegir un titulo  aleatoriamente de la lista
     elegir = True
     while elegir == True:
         titulo_aleatoria = random.choices(lista)        
@@ -304,9 +317,10 @@ def obtenerPalabraAlAzar(valor_nivel,valor_categoria):
        
         # Convertir el resultado a string si es una lista con un solo elemento
         titulo_aleatoria = ''.join(titulo_aleatoria)        
-    #retorna un titulo de pelicula de la lista
+    #retorna la palabra elegida de la lista
     return titulo_aleatoria 
 
+#Muestra los niveles disponibles para que usuario seleccione uno
 def obtenerNivel():
     print ('                                            NIVELES DEL JUEGO:                                              ') 
     print (linea_horizontal)
@@ -317,7 +331,7 @@ def obtenerNivel():
     opciones = input ('Escoge el nivel (1 o 2 o 3 o 4): ').strip()
     return  opciones 
     
-
+#Define la categoria, el nivel y ;a palabra a adivinar
 def definir_juego():        
     #El sistema elige una categoria para iniciar el juego            
     categoria_seleccionada = definir_categoria()
@@ -333,6 +347,7 @@ def definir_juego():
          
     return categoria_seleccionada,nivel,palabra_secreta  
 
+#Valida que lo que se ingreso sea un digito
 def validar_digito(opcion): 
     i = True   
     while i == True:
@@ -344,20 +359,19 @@ def validar_digito(opcion):
             continue         
 
 
-bienvenida()
+bienvenida() #Imprimos mensajes de bienvenida
 jugar = True
+#Mientras el usuario quiera jugar
 while jugar:   
-    categoriaJuego,valor_nivel,palabraJuego = definir_juego()  
-    if valor_nivel != 4:    
+    categoriaJuego,valor_nivel,palabraJuego = definir_juego()  #Definir categoria, nivel y palabra para empezar a jugar
+    if valor_nivel != 4:    # diferente de la opcion Salir emtonces comencemos el juego
         jugar_al_ahorcado(categoriaJuego,valor_nivel,palabraJuego)
-        if jugar_otra_vez() != 's':
+        if jugar_otra_vez() != 's': # Si salir entonces mostrar un mensaje de despedida
             despedida()
             break      
             
     else:
-        despedida()
-        break
-    
-       
+        despedida() # Si salir entonces mostrar un mensaje de despedida
+        break       
       
 
